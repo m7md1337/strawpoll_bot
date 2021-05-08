@@ -64,7 +64,7 @@ for prrooxx in poxylist.read().splitlines():
     try:
         zz = pooling(m,w,prrooxx)
         if json.loads(zz.content)['success'] == 0:
-            print("oooops ip has been used it before
+            print("oooops ip has been used it before")
 ")
         elif json.loads(zz.content)['success'] == 1:
            cont+=1

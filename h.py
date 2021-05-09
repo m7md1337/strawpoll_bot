@@ -10,6 +10,9 @@ from requests.exceptions import ProxyError
 regex = r"""
 	\.content\s=\s (.*?)\n\x09store\.
 	"""
+recsrf = r"""
+	_token\:\s(.*?)\,\n
+	"""
 def retry_if_connection_error(exception):
     return isinstance(exception, SSLError)
     
@@ -36,7 +39,13 @@ def req(url):
     xx3-=1
     finalyyy = mylist[xx3]
     finaaly2 = json.loads(xx1)['cookie_id']
-    return finaaly2,finalyyy
+    
+    
+    #json_string1 = re.finditer(recsrf, req.text, re.MULTILINE | re.VERBOSE | re.IGNORECASE | re.DOTALL | re.UNICODE)
+    #for matchNum1, match1 in enumerate(json_string1, start=1):
+    #    cc1 = match1.groups()
+    #csrf = "".join(cc1).replace('"', '')
+    return finaaly2,finalyyy 
     
 @retry(wait_random_min=1000, wait_random_max=2000)
 def pooling(m,w,proxyy):
@@ -45,10 +54,17 @@ def pooling(m,w,proxyy):
         proxyyy = {
             "https": https
         }
-
+        
+        req1 = requests.get("https://strawpoll.com/"+m+"",proxies=proxyyy)
+        json_string1 = re.finditer(recsrf, req1.text, re.MULTILINE | re.VERBOSE | re.IGNORECASE | re.DOTALL | re.UNICODE)
+        for matchNum1, match1 in enumerate(json_string1, start=1):
+            cc1 = match1.groups()
+        csrf = "".join(cc1).replace('"', '')
         url = "https://strawpoll.com/api/poll/vote"
+        headerss = {"X-CSRF-TOKEN":""+csrf+""}
+        cookies = {'mojolicious': ''+req1.cookies['mojolicious']+''}
         data = {"content_id":""+m+"","checked_answers":""+w+"","name":"","token":""}
-        req = requests.post(url,data=json.dumps(data), proxies=proxyyy)
+        req = requests.post(url,data=json.dumps(data), proxies=proxyyy,headers=headerss,cookies=cookies)
         return req
     except ProxyError:
         print("error in proxy move to next one")
@@ -64,7 +80,9 @@ for prrooxx in poxylist.read().splitlines():
     try:
         zz = pooling(m,w,prrooxx)
         if json.loads(zz.content)['success'] == 0:
+            print(zz.content)
             print("oooops ip has been used it before")
+            
         elif json.loads(zz.content)['success'] == 1:
            cont+=1
            print("\n###  Vote successed###\n")

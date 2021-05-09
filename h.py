@@ -80,7 +80,7 @@ for prrooxx in poxylist.read().splitlines():
     try:
         zz = pooling(m,w,prrooxx)
         if json.loads(zz.content)['success'] == 0:
-            print(zz.content)
+            #print(zz.content)
             print("oooops ip has been used it before")
             
         elif json.loads(zz.content)['success'] == 1:

@@ -61,7 +61,7 @@ def getCaptchToken(proxy):
                 ffff= json.loads(ff.replace(")]}'", ''))
                 return ffff[1]
             else:
-                print("error")
+                return "error"
 
 
 
@@ -113,7 +113,7 @@ def pooling(m,w,proxyy):
         cookies = {'mojolicious': ''+req1.cookies['mojolicious']+''}
         data = {"content_id":""+m+"","checked_answers":""+w+"","name":"","token":getCaptchToken(proxyy)}
         req = requests.post(url,data=json.dumps(data),proxies=proxyyy,headers=headerss,cookies=cookies)
-        return req.content
+        return req.text
     except ProxyError:
         print("error in proxy move to next one")
         pass
@@ -138,12 +138,18 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=threadNUm) as executor:
             print('%r proxy: %s' % (url, exc))
         else:
             try:
-                if json.loads(data)['success'] == 0:
-                    print("oooops ip has been used it before")
+                if "You already voted on this poll" in data:
+                    print("erro when build cookies")
             
-                elif json.loads(data)['success'] == 1:
+                elif "Thanks for your vote!" in data:
                     cont+=1
                     print("\n###  Vote successed###\n")
+                elif "You (or someone in your Wi-Fi\/network) have already participated in this vote" in data:
+                    print("oops ip has been used before")
+                elif "Captcha verification failed. Please try again." in data:
+                    print("error when build Captcha")
+                else:
+                    print("something weird hmmm")  
             except:
                 pass
                               

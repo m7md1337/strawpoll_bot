@@ -115,7 +115,8 @@ def pooling(m,w,proxyy):
         url = "https://strawpoll.com/api/poll/vote"
         headerss = {"X-CSRF-TOKEN":""+csrf+"",'User-Agent':'Mozilla1/5.0 (X11; Linux x86_64) AppleWebKit/53117.36 (KHTML, like Gecko) Chrom1e/90.0.4430.93 Safari/537.36'}
         cookies = {'mojolicious': ''+req1.cookies['mojolicious']+''}
-        data = {"content_id":""+m+"","checked_answers":""+w+"","name":""+generate_random_name(6)+" "+generate_random_name(8)+"","token":getCaptchToken(proxyy)}        req = requests.post(url,data=json.dumps(data),proxies=proxyyy,headers=headerss,cookies=cookies)
+        data = {"content_id":""+m+"","checked_answers":""+w+"","name":""+generate_random_name(6)+" "+generate_random_name(8)+"","token":getCaptchToken(proxyy)}
+	req = requests.post(url,data=json.dumps(data),proxies=proxyyy,headers=headerss,cookies=cookies)
         return req.text
     except ProxyError:
         print("error in proxy move to next one")

@@ -11,9 +11,9 @@ import hashlib
 
 
 def generate_random_voter(length):
-    xx = "0123456789ABCDEF"
+    xx = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"
     return ''.join(random.choice(xx) for _ in range(length))
-
+    
 def generate_random_name(length):
     xx = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     return ''.join(random.choice(xx) for _ in range(length))
@@ -105,7 +105,7 @@ def pooling(m,w,proxyy):
         proxyyy = {
             "https": https
         }
-        cookies1 = {'voter':''+hashlib.md5(generate_random_voter(30).encode('utf-8')).hexdigest()+''}
+        cookies1 = {'voter':''+hashlib.md5(generate_random_voter(40).encode('utf-8')).hexdigest()+''}
         headers1 = {'User-Agent':'Mozilla1/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chr1ome/90.0.4430.93 Safari/537.36'}
         req1 = requests.get("https://strawpoll.com/"+m+"",proxies=proxyyy,cookies=cookies1,headers=headers1)
         json_string1 = re.finditer(recsrf, req1.text, re.MULTILINE | re.VERBOSE | re.IGNORECASE | re.DOTALL | re.UNICODE)
@@ -116,7 +116,7 @@ def pooling(m,w,proxyy):
         headerss = {"X-CSRF-TOKEN":""+csrf+"",'User-Agent':'Mozilla1/5.0 (X11; Linux x86_64) AppleWebKit/53117.36 (KHTML, like Gecko) Chrom1e/90.0.4430.93 Safari/537.36'}
         cookies = {'mojolicious': ''+req1.cookies['mojolicious']+''}
         data = {"content_id":""+m+"","checked_answers":""+w+"","name":""+generate_random_name(6)+" "+generate_random_name(8)+"","token":getCaptchToken(proxyy)}
-	req = requests.post(url,data=json.dumps(data),proxies=proxyyy,headers=headerss,cookies=cookies)
+        req = requests.post(url,data=json.dumps(data),proxies=proxyyy,headers=headerss,cookies=cookies)
         return req.text
     except ProxyError:
         print("error in proxy move to next one")

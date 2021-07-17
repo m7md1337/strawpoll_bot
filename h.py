@@ -13,10 +13,9 @@ regex = r"""
 recsrf = r"""
 	_token\:\s(.*?)\,\n
 	"""
-def retry_if_connection_error(exception):
-    return isinstance(exception, SSLError)
+
     
-@retry(wait_random_min=1000, wait_random_max=2000)
+
 def req(url):
     count = 0
     req = requests.get(url)
@@ -40,14 +39,8 @@ def req(url):
     finalyyy = mylist[xx3]
     finaaly2 = json.loads(xx1)['cookie_id']
     
-    
-    #json_string1 = re.finditer(recsrf, req.text, re.MULTILINE | re.VERBOSE | re.IGNORECASE | re.DOTALL | re.UNICODE)
-    #for matchNum1, match1 in enumerate(json_string1, start=1):
-    #    cc1 = match1.groups()
-    #csrf = "".join(cc1).replace('"', '')
     return finaaly2,finalyyy 
     
-@retry(wait_random_min=1000, wait_random_max=2000)
 def pooling(m,w,proxyy):
     try:
         https = "https://"+proxyy+""
@@ -70,8 +63,6 @@ def pooling(m,w,proxyy):
         print("error in proxy move to next one")
         pass
 
-#req('https://strawpoll.com/ykosrdrss')
-
 urlll = input("put the url for poll: ")
 m,w = req(urlll)
 poxylist = open(input("\nput the path for proxyy: ")) 
@@ -80,7 +71,6 @@ for prrooxx in poxylist.read().splitlines():
     try:
         zz = pooling(m,w,prrooxx)
         if json.loads(zz.content)['success'] == 0:
-            #print(zz.content)
             print("oooops ip has been used it before")
             
         elif json.loads(zz.content)['success'] == 1:
